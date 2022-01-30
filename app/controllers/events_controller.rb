@@ -2,6 +2,13 @@
 
 class EventsController < ApplicationController
   before_action :authenticate_request, only: :create
+  before_action :get_issue, only: :index
+
+  # GET /issues
+  def index
+    events = @issue.events
+    render json: events, status: 200
+  end
 
   # POST /events
   def create
@@ -36,5 +43,9 @@ class EventsController < ApplicationController
       request_headers: request.headers, body: @body
     )
     render json: { errors: valid_request[1] }, status: 500 if valid_request[0] == :error
+  end
+
+  def get_issue
+    @issue = Issue.find(params[:issue_id])
   end
 end
