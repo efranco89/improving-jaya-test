@@ -1,51 +1,40 @@
+# frozen_string_literal: true
+
 class EventsController < ApplicationController
-  before_action :set_event, only: [:show, :update, :destroy]
-
-  # GET /events
-  def index
-    @events = Event.all
-
-    render json: @events
-  end
-
-  # GET /events/1
-  def show
-    render json: @event
-  end
+  before_action :authenticate_request, only: :create
 
   # POST /events
   def create
-    @event = Event.new(event_params)
+    event = Event.new
+    body = JSON.parse(@body)
 
-    if @event.save
-      render json: @event, status: :created, location: @event
-    else
-      render json: @event.errors, status: :unprocessable_entity
+    unless body['issue'].nil?
+      issue = Issue.where(github_issue_id: body['issue']['id']).first
+      if issue.nil?
+        issue = Issue.new
+        issue.github_issue_id = body['issue']['id']
+        issue.tittle = body['issue']['title']
+        issue.save
+      end
+      event = Event.new
+      event.action = body['action']
+      event.issue_id = issue.id
     end
-  end
-
-  # PATCH/PUT /events/1
-  def update
-    if @event.update(event_params)
-      render json: @event
+    if event.save
+      render json: event, status: :created, location: event
     else
-      render json: @event.errors, status: :unprocessable_entity
+      render json: event.errors, status: :unprocessable_entity
     end
-  end
-
-  # DELETE /events/1
-  def destroy
-    @event.destroy
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_event
-      @event = Event.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def event_params
-      params.require(:event).permit(:action, :issue_id)
-    end
+  def authenticate_request
+    @body = request.body.rewind
+    @body = request.body.read
+    valid_request = AuthenticateGithub.authenticate_request(
+      request_headers: request.headers, body: @body
+    )
+    render json: { errors: valid_request[1] }, status: 500 if valid_request[0] == :error
+  end
 end

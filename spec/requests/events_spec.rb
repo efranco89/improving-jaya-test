@@ -11,117 +11,42 @@ require 'rails_helper'
 # It only uses APIs available in rails and/or rspec-rails. There are a number
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
+# frozen_string_literal: true
 
-RSpec.describe "/events", type: :request do
-  # This should return the minimal set of attributes required to create a valid
-  # Event. As you add validations to Event, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
-
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
-  }
-
-  # This should return the minimal set of values that should be in the headers
-  # in order to pass any filters (e.g. authentication) defined in
-  # EventsController, or in your router and rack
-  # middleware. Be sure to keep this updated too.
-  let(:valid_headers) {
-    {}
-  }
-
-  describe "GET /index" do
-    it "renders a successful response" do
-      Event.create! valid_attributes
-      get events_url, headers: valid_headers, as: :json
-      expect(response).to be_successful
+RSpec.describe '/events', type: :request do
+  describe 'POST /create' do
+    before do
+      ENV['GITHUB_TOKEN'] = '123456789'
     end
-  end
-
-  describe "GET /show" do
-    it "renders a successful response" do
-      event = Event.create! valid_attributes
-      get event_url(event), as: :json
-      expect(response).to be_successful
-    end
-  end
-
-  describe "POST /create" do
-    context "with valid parameters" do
-      it "creates a new Event" do
-        expect {
-          post events_url,
-               params: { event: valid_attributes }, headers: valid_headers, as: :json
-        }.to change(Event, :count).by(1)
-      end
-
-      it "renders a JSON response with the new event" do
-        post events_url,
-             params: { event: valid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:created)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
-    end
-
-    context "with invalid parameters" do
-      it "does not create a new Event" do
-        expect {
-          post events_url,
-               params: { event: invalid_attributes }, as: :json
-        }.to change(Event, :count).by(0)
-      end
-
-      it "renders a JSON response with errors for the new event" do
-        post events_url,
-             params: { event: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq("application/json")
-      end
-    end
-  end
-
-  describe "PATCH /update" do
-    context "with valid parameters" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+    let(:body) {
+      "{\"action\":\"created\",\"issue\":{\"url\":\"https://api.github.com/repos/efranco89/messenger/issues/1\",\"repository_url\":\"https://api.github.com/repos/efranco89/messenger\",\"labels_url\":\"https://api.github.com/repos/efranco89/messenger/issues/1/labels{/name}\",\"comments_url\":\"https://api.github.com/repos/efranco89/messenger/issues/1/comments\",\"events_url\":\"https://api.github.com/repos/efranco89/messenger/issues/1/events\",\"html_url\":\"https://github.com/efranco89/messenger/issues/1\",\"id\":1117996550,\"node_id\":\"I_kwDOGWo1vs5Co0YG\",\"number\":1,\"title\":\"I want to test webhooks\",\"user\":{\"login\":\"efranco89\",\"id\":26636074,\"node_id\":\"MDQ6VXNlcjI2NjM2MDc0\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/26636074?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/efranco89\",\"html_url\":\"https://github.com/efranco89\",\"followers_url\":\"https://api.github.com/users/efranco89/followers\",\"following_url\":\"https://api.github.com/users/efranco89/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/efranco89/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/efranco89/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/efranco89/subscriptions\",\"organizations_url\":\"https://api.github.com/users/efranco89/orgs\",\"repos_url\":\"https://api.github.com/users/efranco89/repos\",\"events_url\":\"https://api.github.com/users/efranco89/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/efranco89/received_events\",\"type\":\"User\",\"site_admin\":false},\"labels\":[],\"state\":\"open\",\"locked\":false,\"assignee\":null,\"assignees\":[],\"milestone\":null,\"comments\":9,\"created_at\":\"2022-01-29T01:57:17Z\",\"updated_at\":\"2022-01-29T16:41:07Z\",\"closed_at\":null,\"author_association\":\"OWNER\",\"active_lock_reason\":null,\"body\":\"This is a webhook testing\",\"reactions\":{\"url\":\"https://api.github.com/repos/efranco89/messenger/issues/1/reactions\",\"total_count\":0,\"+1\":0,\"-1\":0,\"laugh\":0,\"hooray\":0,\"confused\":0,\"heart\":0,\"rocket\":0,\"eyes\":0},\"timeline_url\":\"https://api.github.com/repos/efranco89/messenger/issues/1/timeline\",\"performed_via_github_app\":null},\"comment\":{\"url\":\"https://api.github.com/repos/efranco89/messenger/issues/comments/1024944453\",\"html_url\":\"https://github.com/efranco89/messenger/issues/1#issuecomment-1024944453\",\"issue_url\":\"https://api.github.com/repos/efranco89/messenger/issues/1\",\"id\":1024944453,\"node_id\":\"IC_kwDOGWo1vs49F2lF\",\"user\":{\"login\":\"efranco89\",\"id\":26636074,\"node_id\":\"MDQ6VXNlcjI2NjM2MDc0\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/26636074?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/efranco89\",\"html_url\":\"https://github.com/efranco89\",\"followers_url\":\"https://api.github.com/users/efranco89/followers\",\"following_url\":\"https://api.github.com/users/efranco89/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/efranco89/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/efranco89/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/efranco89/subscriptions\",\"organizations_url\":\"https://api.github.com/users/efranco89/orgs\",\"repos_url\":\"https://api.github.com/users/efranco89/repos\",\"events_url\":\"https://api.github.com/users/efranco89/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/efranco89/received_events\",\"type\":\"User\",\"site_admin\":false},\"created_at\":\"2022-01-29T16:41:07Z\",\"updated_at\":\"2022-01-29T16:41:07Z\",\"author_association\":\"OWNER\",\"body\":\"GitHub's REST API considers every pull request to be an issue, but not every issue is a pull request. For this reason, the Issue Events and Timeline Events endpoints may return both issues and pull requests in the response. Pull requests have a pull_request property in the issue object. Because pull requests are issues, issue and pull request numbers do not overlap in a repository. For example, if you open your first issue in a repository, the number will be 1. If you then open a pull request, the number will be 2. Each event type specifies if the event occurs in pull request, issue\",\"reactions\":{\"url\":\"https://api.github.com/repos/efranco89/messenger/issues/comments/1024944453/reactions\",\"total_count\":0,\"+1\":0,\"-1\":0,\"laugh\":0,\"hooray\":0,\"confused\":0,\"heart\":0,\"rocket\":0,\"eyes\":0},\"performed_via_github_app\":null},\"repository\":{\"id\":426390974,\"node_id\":\"R_kgDOGWo1vg\",\"name\":\"messenger\",\"full_name\":\"efranco89/messenger\",\"private\":false,\"owner\":{\"login\":\"efranco89\",\"id\":26636074,\"node_id\":\"MDQ6VXNlcjI2NjM2MDc0\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/26636074?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/efranco89\",\"html_url\":\"https://github.com/efranco89\",\"followers_url\":\"https://api.github.com/users/efranco89/followers\",\"following_url\":\"https://api.github.com/users/efranco89/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/efranco89/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/efranco89/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/efranco89/subscriptions\",\"organizations_url\":\"https://api.github.com/users/efranco89/orgs\",\"repos_url\":\"https://api.github.com/users/efranco89/repos\",\"events_url\":\"https://api.github.com/users/efranco89/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/efranco89/received_events\",\"type\":\"User\",\"site_admin\":false},\"html_url\":\"https://github.com/efranco89/messenger\",\"description\":null,\"fork\":false,\"url\":\"https://api.github.com/repos/efranco89/messenger\",\"forks_url\":\"https://api.github.com/repos/efranco89/messenger/forks\",\"keys_url\":\"https://api.github.com/repos/efranco89/messenger/keys{/key_id}\",\"collaborators_url\":\"https://api.github.com/repos/efranco89/messenger/collaborators{/collaborator}\",\"teams_url\":\"https://api.github.com/repos/efranco89/messenger/teams\",\"hooks_url\":\"https://api.github.com/repos/efranco89/messenger/hooks\",\"issue_events_url\":\"https://api.github.com/repos/efranco89/messenger/issues/events{/number}\",\"events_url\":\"https://api.github.com/repos/efranco89/messenger/events\",\"assignees_url\":\"https://api.github.com/repos/efranco89/messenger/assignees{/user}\",\"branches_url\":\"https://api.github.com/repos/efranco89/messenger/branches{/branch}\",\"tags_url\":\"https://api.github.com/repos/efranco89/messenger/tags\",\"blobs_url\":\"https://api.github.com/repos/efranco89/messenger/git/blobs{/sha}\",\"git_tags_url\":\"https://api.github.com/repos/efranco89/messenger/git/tags{/sha}\",\"git_refs_url\":\"https://api.github.com/repos/efranco89/messenger/git/refs{/sha}\",\"trees_url\":\"https://api.github.com/repos/efranco89/messenger/git/trees{/sha}\",\"statuses_url\":\"https://api.github.com/repos/efranco89/messenger/statuses/{sha}\",\"languages_url\":\"https://api.github.com/repos/efranco89/messenger/languages\",\"stargazers_url\":\"https://api.github.com/repos/efranco89/messenger/stargazers\",\"contributors_url\":\"https://api.github.com/repos/efranco89/messenger/contributors\",\"subscribers_url\":\"https://api.github.com/repos/efranco89/messenger/subscribers\",\"subscription_url\":\"https://api.github.com/repos/efranco89/messenger/subscription\",\"commits_url\":\"https://api.github.com/repos/efranco89/messenger/commits{/sha}\",\"git_commits_url\":\"https://api.github.com/repos/efranco89/messenger/git/commits{/sha}\",\"comments_url\":\"https://api.github.com/repos/efranco89/messenger/comments{/number}\",\"issue_comment_url\":\"https://api.github.com/repos/efranco89/messenger/issues/comments{/number}\",\"contents_url\":\"https://api.github.com/repos/efranco89/messenger/contents/{+path}\",\"compare_url\":\"https://api.github.com/repos/efranco89/messenger/compare/{base}...{head}\",\"merges_url\":\"https://api.github.com/repos/efranco89/messenger/merges\",\"archive_url\":\"https://api.github.com/repos/efranco89/messenger/{archive_format}{/ref}\",\"downloads_url\":\"https://api.github.com/repos/efranco89/messenger/downloads\",\"issues_url\":\"https://api.github.com/repos/efranco89/messenger/issues{/number}\",\"pulls_url\":\"https://api.github.com/repos/efranco89/messenger/pulls{/number}\",\"milestones_url\":\"https://api.github.com/repos/efranco89/messenger/milestones{/number}\",\"notifications_url\":\"https://api.github.com/repos/efranco89/messenger/notifications{?since,all,participating}\",\"labels_url\":\"https://api.github.com/repos/efranco89/messenger/labels{/name}\",\"releases_url\":\"https://api.github.com/repos/efranco89/messenger/releases{/id}\",\"deployments_url\":\"https://api.github.com/repos/efranco89/messenger/deployments\",\"created_at\":\"2021-11-09T21:23:23Z\",\"updated_at\":\"2021-11-09T21:48:51Z\",\"pushed_at\":\"2022-01-29T01:21:50Z\",\"git_url\":\"git://github.com/efranco89/messenger.git\",\"ssh_url\":\"git@github.com:efranco89/messenger.git\",\"clone_url\":\"https://github.com/efranco89/messenger.git\",\"svn_url\":\"https://github.com/efranco89/messenger\",\"homepage\":null,\"size\":167,\"stargazers_count\":0,\"watchers_count\":0,\"language\":\"Ruby\",\"has_issues\":true,\"has_projects\":true,\"has_downloads\":true,\"has_wiki\":true,\"has_pages\":false,\"forks_count\":0,\"mirror_url\":null,\"archived\":false,\"disabled\":false,\"open_issues_count\":1,\"license\":null,\"allow_forking\":true,\"is_template\":false,\"topics\":[],\"visibility\":\"public\",\"forks\":0,\"open_issues\":1,\"watchers\":0,\"default_branch\":\"main\"},\"sender\":{\"login\":\"efranco89\",\"id\":26636074,\"node_id\":\"MDQ6VXNlcjI2NjM2MDc0\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/26636074?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/efranco89\",\"html_url\":\"https://github.com/efranco89\",\"followers_url\":\"https://api.github.com/users/efranco89/followers\",\"following_url\":\"https://api.github.com/users/efranco89/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/efranco89/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/efranco89/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/efranco89/subscriptions\",\"organizations_url\":\"https://api.github.com/users/efranco89/orgs\",\"repos_url\":\"https://api.github.com/users/efranco89/repos\",\"events_url\":\"https://api.github.com/users/efranco89/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/efranco89/received_events\",\"type\":\"User\",\"site_admin\":false}}"
+    }
+    context 'When the headers are corrects' do
+      let(:request_headers) {
+        {
+          'Content-Type':	'application/json',
+          'X-Github-Event':	'issue_comment',
+          'X-Hub-Signature': 'sha1=12c6b5721e813a955265c48a6fe9dbf01368bbbb',
+          'X-Hub-Signature-256': 'sha256=2417365a3f1d442b24a8cc7b75fa67992c95ec0ccfe3c97110b96f55971e0953'
+        }
       }
-
-      it "updates the requested event" do
-        event = Event.create! valid_attributes
-        patch event_url(event),
-              params: { event: new_attributes }, headers: valid_headers, as: :json
-        event.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "renders a JSON response with the event" do
-        event = Event.create! valid_attributes
-        patch event_url(event),
-              params: { event: new_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to match(a_string_including("application/json"))
+      it "Creates event" do
+        post '/events', params: body, headers: request_headers
+        expect(response.code).to eq('201')
       end
     end
-
-    context "with invalid parameters" do
-      it "renders a JSON response with errors for the event" do
-        event = Event.create! valid_attributes
-        patch event_url(event),
-              params: { event: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq("application/json")
+    context 'When the headers are bad' do
+      let(:request_headers) {
+        {
+          'X-Github-Event':	'issue_comment',
+          'X-Hub-Signature': 'sha1=12c6b5721e813a955265c48a6fe9dbf01368bbbb',
+          'X-Hub-Signature-256': 'sha256=2417365a3f1d442b24a8cc7b75fa67992c95ec0ccfe3c97110b96f55971e0953'
+        }
+      }
+      it 'Returns Internal Server Error' do
+        post '/events', params: body, headers: request_headers
+        expect(response.code).to eq('500')
       end
-    end
-  end
-
-  describe "DELETE /destroy" do
-    it "destroys the requested event" do
-      event = Event.create! valid_attributes
-      expect {
-        delete event_url(event), headers: valid_headers, as: :json
-      }.to change(Event, :count).by(-1)
     end
   end
 end
