@@ -2,6 +2,7 @@
 
 class EventsController < ApplicationController
   before_action :authenticate_request, only: :create
+  before_action :authenticate_user, only: :index
   before_action :get_issue, only: :index
 
   # GET /issues
@@ -43,6 +44,15 @@ class EventsController < ApplicationController
       request_headers: request.headers, body: @body
     )
     render json: { errors: valid_request[1] }, status: 500 if valid_request[0] == :error
+  end
+
+  def authenticate_user
+    @body = request.body.rewind
+    @body = request.body.read
+    valid_user = AuthenticateUser.grant_access(
+      request_headers: request.headers, body: @body
+    )
+    render json: { errors: valid_user[1] }, status: 500 if valid_user[0] == :error
   end
 
   def get_issue
