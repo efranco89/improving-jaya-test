@@ -26,8 +26,10 @@ class EventsController < ApplicationController
       end
       event = Event.new
       event.action = body['action']
+      event.number = issue.github_issue_id
       event.issue_id = issue.id
     end
+  
     if event.save
       render json: event, status: :created, location: event
     else
